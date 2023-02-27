@@ -1,14 +1,22 @@
-import React from "react";
+import React,{useState} from "react";
 import ExpenseItem from "./ExpenseItem/ExpenseItem";
 import './expense.css'
 
 const Expense=(props)=>{
     const {expense}=props;
 
-   
+
         return (
           <div className="expenses">
-          <ExpenseItem title={expense[0].title}
+            {expense.map((single_expense)=>{
+              return<ExpenseItem  title={single_expense.title}
+              amount={single_expense.amount}
+              date={single_expense.date}
+              key={single_expense.Id}/>
+              
+})}
+          {
+          /* <ExpenseItem title={expense[0].title}
           amount={expense[0].amount}
           date={expense[0].date}
           />
@@ -25,7 +33,8 @@ const Expense=(props)=>{
           date={expense[3].date}
           />
           <ExpenseItem/>
-      
+       */
+       }
           
        </div> 
        );

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import './App.css';
 import Expense from './component/expense/expense';
 import NewExpense from './component/new_expense/NewExpense';
+import axios from 'axios';
 
 const DUMMY_DATA = [
   {
@@ -28,10 +29,16 @@ const DUMMY_DATA = [
 
 
 function App() {
+  let flag=0;
   const [dummy, setDummy] = useState(DUMMY_DATA)
   const [isLoading, setLoading] = useState(true)
+  const [fromDate, setFromDate] = useState(new Date('2022'))
+  const [ToDate, setToDate] = useState(new Date('2023'))
   useEffect(() => {
-    fetch('http://localhost:8080/api/v1/expenseTracker')
+    console.log(fromDate,ToDate);
+    let link=('http://localhost:8080/api/v1/expensesTracker/'+fromDate+'/'+ToDate).toString()
+    console.log(link);
+    fetch('http://localhost:8080/api/v1/expenseTracker/')
       .then(Response => Response.json())
       .then((expense) => {
         console.log(expense);
@@ -39,20 +46,44 @@ function App() {
         setLoading(false)
 
       })
+
+      
   }, [])
   const onSave = (new_expense = {}) => {
+    
     const expense = {
-      ...new_expense,
-      Id: Math.random().toString()
+      ...new_expense
     }
+    console.log(expense)
+
+    const requestOptions = {
+      method: 'POST',
+      body: expense
+  };
+  console.log(requestOptions);
+  axios.post('http://localhost:8080/api/v1/expenseTracker',new_expense)
+      .then(Response => Response.json())
+      .then((expense) => {
+        console.log(expense);
+      })
     setDummy((previous_list) => { return [...previous_list, new_expense] })
     DUMMY_DATA.push(expense)
     console.log(DUMMY_DATA);
   }
+
+  const onDateChange = (from=new Date(),to=new Date()) => {
+    setFromDate(()=>{
+      return from
+    })
+    setToDate(()=>{
+      return to
+    })
+  }
+
   return (
 
     <> <NewExpense onSave={onSave} />
-      <Expense expense={dummy} isListLoading={isLoading} />
+      <Expense expense={dummy} isListLoading={isLoading} onDateChange={onDateChange} />
     </>
   );
 }

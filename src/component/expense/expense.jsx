@@ -1,13 +1,34 @@
-import React,{useState} from "react";
+import React,{useState, useEffect, useRef } from "react";
 import ExpenseItem from "./ExpenseItem/ExpenseItem";
 import './expense.css'
 
 const Expense=(props)=>{
     const {expense}=props;
+    const [enterDate,setEnterDate]=useState('')
+    const [fromDate, setFromDate] = useState(new Date('2022'))
+  const [ToDate, setToDate] = useState(new Date('2023'))
+const date = useRef();
+const focus=()=>{
+  console.log("focus",date);
+   date.current.type='date'
+}
+const blur=()=>{
+  console.log("focus",date);
+   date.current.type='text'
+}
 
 
+
+// const dateChange=(event)=>{
+// props.onDateChange(fromDate,ToDate)
+// setFromDate(event.target.value);onChange={dateChange} 
+// }
         return (
           <div className="expenses">
+            <div className="new-expense__controll">
+              <div ><label>From</label><input  ref={date} type="text" name="date" placeholder="20/12/2022" value={fromDate} onFocus={focus} onBlur={blur}/></div>
+            <div><label>To</label><input type="date" name="date" id="date"  /></div>
+            </div>
             {expense.map((single_expense)=>{
               return<ExpenseItem  title={single_expense.title}
               amount={single_expense.amount}
